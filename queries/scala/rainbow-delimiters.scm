@@ -6,11 +6,19 @@
   "{" @delimiter
   "}" @delimiter @sentinel) @container
 
-(formal_parameters
+(block
+  "{" @delimiter
+  "}" @delimiter @sentinel) @container
+
+(parameters
   "(" @delimiter
   ")" @delimiter @sentinel) @container
 
 (arguments
+  "(" @delimiter
+  ")" @delimiter @sentinel) @container
+
+(parenthesized_expression
   "(" @delimiter
   ")" @delimiter @sentinel) @container
 
