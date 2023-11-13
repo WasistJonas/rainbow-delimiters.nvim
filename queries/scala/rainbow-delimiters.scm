@@ -6,7 +6,7 @@
   "{" @delimiter
   "}" @delimiter @sentinel) @container
 
-(block
+(case_block
   "{" @delimiter
   "}" @delimiter @sentinel) @container
 
