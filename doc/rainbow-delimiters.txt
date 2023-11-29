@@ -5,7 +5,7 @@
 
 Author: Alejandro "HiPhish" Sanchez
 License: Apache-2.0
-Version: 0.0.0
+Version: 0.2.0
 
 
 ==============================================================================
@@ -58,6 +58,12 @@ keys are recognized:
   is the key for the default query.  See |rb-delimiters-query| for more
   information about queries.
 
+`priority`
+  Dictionary mapping Tree-sitter language names to highlight priority values.
+  The empty string is the key for the default priority.  See
+  |vim.highlight.priorities| and |treesitter-highlight-priority| for more
+  information on priorities.
+
 `highlight`
   List of names of the highlight groups to use for highlighting, for more
   information see |rb-delimiters-colors|.
@@ -90,6 +96,10 @@ Here is an example configuration:
             \ '': 'rainbow-delimiters',
             \ 'lua': 'rainbow-blocks',
         \ },
+        \ 'priority': {
+            \ '': 110,
+            \ 'lua': 210,
+        \ },
         \ 'highlight': [
             \ 'RainbowDelimiterRed',
             \ 'RainbowDelimiterYellow',
@@ -108,6 +118,7 @@ Alternatively, the same configuration in Lua:
     -- This module contains a number of default definitions
     local rainbow_delimiters = require 'rainbow-delimiters'
 
+    ---@type rainbow_delimiters.config
     vim.g.rainbow_delimiters = {
         strategy = {
             [''] = rainbow_delimiters.strategy['global'],
@@ -116,6 +127,10 @@ Alternatively, the same configuration in Lua:
         query = {
             [''] = 'rainbow-delimiters',
             lua = 'rainbow-blocks',
+        },
+        priority = {
+            [''] = 110,
+            lua = 210,
         },
         highlight = {
             'RainbowDelimiterRed',
@@ -157,7 +172,7 @@ available as part of a Lua module.
         blacklist = {'c', 'cpp'},
     }
 <
-The keys are exactly the same as for |g:rainbow_parentheses|.  If fact, this
+The keys are exactly the same as for |g:rainbow_delimiters|.  In fact, this
 function does the same as setting the variable directly.
 
 As an aside, this is a bad practice carried over from a time when Lua support
@@ -303,6 +318,8 @@ addition there are the following extra queries for certain languages:
   - `rainbow-parens` Only parentheses without React tags
 - `tsx`
   - `rainbow-parens` Just Typescript highlighting without React tags
+- `typescript`
+  - `rainbow-parens` Just Typescript highlighting without React tags
 - `verilog`
   - `rainbow-blocks` Matches keyword delimiters like `begin` and `end`, in
     addition to parentheses
@@ -421,9 +438,9 @@ object-oriented terminology we would say that a strategy table must implement
 the strategy protocol.
 >
     strategy = {
-        on_attach = function(bufnr: number, settings: table),
-        on_detach = function(bufnr: string),
-        on_reset  = function(bufnr: number, settings: table),
+        on_attach = function(bufnr: integer, settings: table),
+        on_detach = function(bufnr: integer),
+        on_reset  = function(bufnr: integer, settings: table),
     }
 <
 
@@ -439,6 +456,7 @@ The settings table contains the following entries:
 
   - `strategy`   Strategy in use
   - `parser`     Reference to the buffer parser (|treesitter-languagetree|)
+  - `lang`       Language of the current parser
 
 A strategy should pick the settings it needs and either cache them in an
 internal table, or construct closures (e.g. for callback functions) around
